@@ -1,0 +1,16 @@
+torch>=2.0.0
+transformers>=4.57.0
+peft>=0.7.0
+bitsandbytes>=0.41.0
+accelerate>=0.24.0
+datasets
+pillow
+numpy
+opencv-python
+shapely
+matplotlib
+tqdm
+wandb
+scikit-learn
+scipy
+h5py
