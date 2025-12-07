@@ -41,7 +41,7 @@ du -sh $TMPDIR/OCID_grasp
 # 4. Run Training
 # Note: --data_dir points to the fast local copy ($TMPDIR/OCID_grasp)
 # The config file handles batch size (8), workers (8), and reduced epochs (3)
-python -u IRS/train/train_grasp_lora.py \
+python -u train/train_grasp_lora.py \
     --data_dir $TMPDIR/OCID_grasp \
     --checkpoint_dir /scratch.global/kanth042/IRS_project/checkpoints/run2 \
     --run_name grasp-vlm-run2

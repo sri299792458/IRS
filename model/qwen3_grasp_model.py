@@ -96,41 +96,53 @@ def load_model_and_processor(config: Dict, use_qlora: bool = True):
     return model, processor
 
 
-def load_trained_model(checkpoint_path: str, config: Dict):
+def load_trained_model(checkpoint_path: str, config: Dict, load_in_4bit: bool = False):
     """
     Load a trained LoRA model from checkpoint.
+    Defaults to 16-bit (bfloat16) to avoid bitsandbytes execution errors on inference nodes.
     """
     from peft import PeftModel
 
     model_name = config['model_name']
+    print(f"Loading base model {model_name}...")
 
-    # Load base model
+    # Load processor
     processor = AutoProcessor.from_pretrained(model_name, trust_remote_code=True)
 
-    # For inference, we can load in 4-bit to save memory
-    bnb_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.bfloat16,
-    )
+    # Quantization config
+    if load_in_4bit:
+        try:
+            bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.bfloat16,
+            )
+            print("Loading in 4-bit (QLoRA)...")
+        except ImportError:
+            print("Warning: bitsandbytes not found, falling back to 16-bit")
+            bnb_config = None
+    else:
+        bnb_config = None
+        print("Loading in 16-bit (bfloat16) - High Precision...")
 
-    # Use the same systematic loading for inference
-    model_config = AutoConfig.from_pretrained(model_name, trust_remote_code=True)
+    # Use the same systematic loading
+    # model_config = AutoConfig.from_pretrained(model_name, trust_remote_code=True)
 
-    base_model = Qwen2VLForConditionalGeneration.from_pretrained(
+    print(f"Initializing model using {MODEL_CLASS.__name__}...")
+    base_model = MODEL_CLASS.from_pretrained(
         model_name,
-        config=model_config,
+        # config=model_config, 
         quantization_config=bnb_config,
         device_map="auto",
         torch_dtype=torch.bfloat16,
         attn_implementation="sdpa",
+        trust_remote_code=True,
     )
 
     # Load LoRA weights
+    print(f"Loading LoRA adapters from {checkpoint_path}...")
     model = PeftModel.from_pretrained(base_model, checkpoint_path)
     model.eval()
-
-    print(f"Loaded trained model from {checkpoint_path}")
 
     return model, processor
 
