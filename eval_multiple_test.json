@@ -1,0 +1,357 @@
+{
+  "config": {
+    "ocid_vlg_path": "OCID-VLG",
+    "model_name": "Qwen/Qwen3-VL-8B-Instruct",
+    "checkpoint_dir": "checkpoints/qwen3-grasp-vlg-lora",
+    "results_dir": "results",
+    "image_size": [
+      480,
+      640
+    ],
+    "dataset_version": "multiple",
+    "grasp_selection": "random",
+    "x_bins": 1000,
+    "y_bins": 1000,
+    "theta_bins": 180,
+    "w_bins": 1000,
+    "h_bins": 1000,
+    "aug_rotation_deg": 15,
+    "aug_color_jitter": true,
+    "aug_label_noise_prob": 0.2,
+    "aug_mask_field_prob": 0.1,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "num_epochs": 3,
+    "train_batch_size": 8,
+    "eval_batch_size": 16,
+    "gradient_accumulation_steps": 2,
+    "dataloader_num_workers": 8,
+    "learning_rate": 0.0002,
+    "warmup_steps": 500,
+    "lr_scheduler": "cosine",
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "logging_steps": 50,
+    "eval_steps": 3000,
+    "save_steps": 3000,
+    "save_total_limit": 3,
+    "generation_max_tokens": 20,
+    "generation_temperature": 0.1,
+    "generation_top_p": 0.9,
+    "use_constrained_decoding": true,
+    "ensemble_size": 4,
+    "iou_threshold": 0.25,
+    "angle_tolerance_deg": 30,
+    "debug": false,
+    "visualize_samples": 10
+  },
+  "metrics": {
+    "num_samples": 17749,
+    "success_rate": 0.9257986365429038,
+    "mean_iou": 0.5157257564077364,
+    "median_iou": 0.5250254855507118,
+    "per_class": {
+      "flashlight_1": {
+        "num_samples": 130,
+        "success_rate": 0.8769230769230769,
+        "mean_iou": 0.40938340792469297
+      },
+      "food_can_3": {
+        "num_samples": 377,
+        "success_rate": 0.8673740053050398,
+        "mean_iou": 0.5701174907831716
+      },
+      "food_bag_4": {
+        "num_samples": 474,
+        "success_rate": 0.9662447257383966,
+        "mean_iou": 0.5227262639238724
+      },
+      "keyboard_1": {
+        "num_samples": 305,
+        "success_rate": 0.9770491803278688,
+        "mean_iou": 0.5800951127277494
+      },
+      "ball_2": {
+        "num_samples": 216,
+        "success_rate": 0.9722222222222222,
+        "mean_iou": 0.669403085924611
+      },
+      "instant_noodles_2": {
+        "num_samples": 250,
+        "success_rate": 0.832,
+        "mean_iou": 0.44065534934756856
+      },
+      "glue_stick_1": {
+        "num_samples": 185,
+        "success_rate": 0.8594594594594595,
+        "mean_iou": 0.41248902875976134
+      },
+      "shampoo_3": {
+        "num_samples": 324,
+        "success_rate": 0.9691358024691358,
+        "mean_iou": 0.5301315658714623
+      },
+      "cereal_box_1": {
+        "num_samples": 784,
+        "success_rate": 0.9285714285714286,
+        "mean_iou": 0.4829866961430036
+      },
+      "cereal_box_3": {
+        "num_samples": 1110,
+        "success_rate": 0.9585585585585585,
+        "mean_iou": 0.526755816097767
+      },
+      "food_bag_2": {
+        "num_samples": 501,
+        "success_rate": 0.9780439121756487,
+        "mean_iou": 0.4692272032205897
+      },
+      "kleenex_1": {
+        "num_samples": 535,
+        "success_rate": 0.9532710280373832,
+        "mean_iou": 0.479580579574784
+      },
+      "coffee_mug_2": {
+        "num_samples": 201,
+        "success_rate": 0.7213930348258707,
+        "mean_iou": 0.3055685117088675
+      },
+      "shampoo_2": {
+        "num_samples": 238,
+        "success_rate": 0.8949579831932774,
+        "mean_iou": 0.4292215950621862
+      },
+      "instant_noodles_1": {
+        "num_samples": 295,
+        "success_rate": 1.0,
+        "mean_iou": 0.5216067749145535
+      },
+      "cereal_box_5": {
+        "num_samples": 725,
+        "success_rate": 0.9448275862068966,
+        "mean_iou": 0.4868605842506072
+      },
+      "marker_2": {
+        "num_samples": 703,
+        "success_rate": 0.9416785206258891,
+        "mean_iou": 0.473691316275969
+      },
+      "marker_1": {
+        "num_samples": 661,
+        "success_rate": 0.9152798789712556,
+        "mean_iou": 0.46371815891975
+      },
+      "marker_3": {
+        "num_samples": 456,
+        "success_rate": 0.9407894736842105,
+        "mean_iou": 0.4758254675095722
+      },
+      "cereal_box_4": {
+        "num_samples": 665,
+        "success_rate": 0.9187969924812031,
+        "mean_iou": 0.45105715121270024
+      },
+      "kleenex_3": {
+        "num_samples": 575,
+        "success_rate": 0.9095652173913044,
+        "mean_iou": 0.5131064243767987
+      },
+      "kleenex_2": {
+        "num_samples": 764,
+        "success_rate": 0.9869109947643979,
+        "mean_iou": 0.5315529779526426
+      },
+      "peach_1": {
+        "num_samples": 139,
+        "success_rate": 0.9856115107913669,
+        "mean_iou": 0.6983141507860163
+      },
+      "food_box_3": {
+        "num_samples": 503,
+        "success_rate": 0.9463220675944334,
+        "mean_iou": 0.4801107928139296
+      },
+      "coffee_mug_1": {
+        "num_samples": 170,
+        "success_rate": 0.7941176470588235,
+        "mean_iou": 0.3533717914460015
+      },
+      "ball_3": {
+        "num_samples": 374,
+        "success_rate": 0.9598930481283422,
+        "mean_iou": 0.685421865778445
+      },
+      "food_can_1": {
+        "num_samples": 77,
+        "success_rate": 0.987012987012987,
+        "mean_iou": 0.4984347535028258
+      },
+      "soda_can_2": {
+        "num_samples": 385,
+        "success_rate": 0.9116883116883117,
+        "mean_iou": 0.6023811265382668
+      },
+      "hand_towel_3": {
+        "num_samples": 144,
+        "success_rate": 0.8680555555555556,
+        "mean_iou": 0.47915863563782285
+      },
+      "bowl_1": {
+        "num_samples": 104,
+        "success_rate": 0.6153846153846154,
+        "mean_iou": 0.2745903989652905
+      },
+      "banana_1": {
+        "num_samples": 153,
+        "success_rate": 0.8562091503267973,
+        "mean_iou": 0.4322895710363962
+      },
+      "stapler_1": {
+        "num_samples": 114,
+        "success_rate": 0.9649122807017544,
+        "mean_iou": 0.5258145300206848
+      },
+      "apple_1": {
+        "num_samples": 321,
+        "success_rate": 0.956386292834891,
+        "mean_iou": 0.7160187075757655
+      },
+      "lime_1": {
+        "num_samples": 38,
+        "success_rate": 0.8947368421052632,
+        "mean_iou": 0.6551167925246145
+      },
+      "food_box_2": {
+        "num_samples": 530,
+        "success_rate": 0.9471698113207547,
+        "mean_iou": 0.47387953101205554
+      },
+      "orange_1": {
+        "num_samples": 204,
+        "success_rate": 0.8529411764705882,
+        "mean_iou": 0.6061880170275991
+      },
+      "pear_1": {
+        "num_samples": 184,
+        "success_rate": 1.0,
+        "mean_iou": 0.689455391683512
+      },
+      "pear_2": {
+        "num_samples": 115,
+        "success_rate": 0.7478260869565218,
+        "mean_iou": 0.5618818834433661
+      },
+      "potato_1": {
+        "num_samples": 93,
+        "success_rate": 0.8494623655913979,
+        "mean_iou": 0.5999370357496938
+      },
+      "food_box_1": {
+        "num_samples": 662,
+        "success_rate": 0.974320241691843,
+        "mean_iou": 0.5215197313371548
+      },
+      "stapler_2": {
+        "num_samples": 84,
+        "success_rate": 0.9761904761904762,
+        "mean_iou": 0.5452801053286352
+      },
+      "keyboard_2": {
+        "num_samples": 250,
+        "success_rate": 0.96,
+        "mean_iou": 0.5635312432673734
+      },
+      "shampoo_1": {
+        "num_samples": 201,
+        "success_rate": 0.8557213930348259,
+        "mean_iou": 0.5321658852982442
+      },
+      "soda_can_1": {
+        "num_samples": 349,
+        "success_rate": 0.9340974212034384,
+        "mean_iou": 0.6048452136173591
+      },
+      "sponge_1": {
+        "num_samples": 77,
+        "success_rate": 0.8311688311688312,
+        "mean_iou": 0.375924568051027
+      },
+      "hand_towel_1": {
+        "num_samples": 260,
+        "success_rate": 0.6846153846153846,
+        "mean_iou": 0.37501442279416497
+      },
+      "food_bag_3": {
+        "num_samples": 286,
+        "success_rate": 0.986013986013986,
+        "mean_iou": 0.5439264844662802
+      },
+      "food_can_2": {
+        "num_samples": 471,
+        "success_rate": 0.9087048832271762,
+        "mean_iou": 0.6414524296053454
+      },
+      "binder_1": {
+        "num_samples": 56,
+        "success_rate": 0.6071428571428571,
+        "mean_iou": 0.26220281812768753
+      },
+      "toothpaste_1": {
+        "num_samples": 95,
+        "success_rate": 0.968421052631579,
+        "mean_iou": 0.5002582200355206
+      },
+      "ball_1": {
+        "num_samples": 188,
+        "success_rate": 0.9680851063829787,
+        "mean_iou": 0.5831315647269315
+      },
+      "hand_towel_2": {
+        "num_samples": 153,
+        "success_rate": 0.8496732026143791,
+        "mean_iou": 0.3736323615266575
+      },
+      "apple_2": {
+        "num_samples": 200,
+        "success_rate": 0.94,
+        "mean_iou": 0.6718201760875371
+      },
+      "lemon_1": {
+        "num_samples": 68,
+        "success_rate": 0.75,
+        "mean_iou": 0.5027508664435892
+      },
+      "toothpaste_2": {
+        "num_samples": 142,
+        "success_rate": 0.9647887323943662,
+        "mean_iou": 0.47292642344389657
+      },
+      "tomato_1": {
+        "num_samples": 58,
+        "success_rate": 1.0,
+        "mean_iou": 0.7424925224497447
+      },
+      "sponge_2": {
+        "num_samples": 2,
+        "success_rate": 1.0,
+        "mean_iou": 0.32954599250195765
+      },
+      "bell_pepper_1": {
+        "num_samples": 25,
+        "success_rate": 0.36,
+        "mean_iou": 0.2638263789156612
+      }
+    }
+  },
+  "num_samples": 17749
+}

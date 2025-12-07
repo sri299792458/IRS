@@ -409,51 +409,54 @@ def main(args):
     # Optional: visualizations
     if args.visualize:
         print("\nGenerating visualizations...")
-        from inference.visualize import visualize_batch, draw_grasp_rectangle
+        vis_dir = output_dir / "visualization"
+        vis_dir.mkdir(exist_ok=True)
         
-        # Visualize first N samples
-        n_vis = min(10, len(results['predictions']))
+        from inference.visualize import draw_grasp_rectangle
+        import cv2
         
-        vis_samples = []
-        for i in range(n_vis):
+        # Max samples to visualize (default 100 if not specified)
+        n_vis = args.max_samples if args.max_samples else 100
+        n_vis = min(n_vis, len(results['predictions']))
+        
+        print(f"Saving {n_vis} visualization images to {vis_dir}...")
+        
+        for i in tqdm(range(n_vis)):
             sample = dataset[i]
             pred = results['predictions'][i]
             success = results['successes'][i]
+            target = results['targets'][i]
+            iou = results['ious'][i]
             
-            vis_samples.append({
-                'image': sample['image'],
-                'pred': pred,
-                'gt': sample['grasps'][0] if sample['grasps'] else None,
-                'sentence': sample['sentence'],
-                'success': success,
-            })
-        
-        # Create visualization
-        import matplotlib.pyplot as plt
-        
-        fig, axes = plt.subplots(2, 5, figsize=(20, 8))
-        axes = axes.flatten()
-        
-        for i, s in enumerate(vis_samples):
-            img = s['image'].copy()
+            # Convert to BGR for OpenCV
+            img = sample['image'].copy()
+            # If RGB, convert to BGR
+            # img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR) 
             
-            # Draw GT in blue
-            if s['gt']:
-                img = draw_grasp_rectangle(img, s['gt'], color=(0, 0, 255), thickness=2)
+            # Draw GT (Blue)
+            if sample['grasps']:
+                # Draw just the first GT for clarity, or all? First is cleaner.
+                img = draw_grasp_rectangle(img, sample['grasps'][0], color=(0, 0, 255), thickness=2)
             
-            # Draw pred in green (or red if failed)
-            pred_color = (0, 255, 0) if s['success'] else (255, 0, 0)
-            img = draw_grasp_rectangle(img, s['pred'], color=pred_color, thickness=2)
+            # Draw Pred (Green=Success, Red=Fail)
+            color = (0, 255, 0) if success else (255, 0, 0)
+            img = draw_grasp_rectangle(img, pred, color=color, thickness=2)
             
-            axes[i].imshow(img)
-            status = "✓" if s['success'] else "✗"
-            axes[i].set_title(f"{status} {s['sentence'][:30]}...", fontsize=8)
-            axes[i].axis('off')
-        
-        plt.tight_layout()
-        vis_path = output_dir / f"vis_{config['dataset_version']}_{args.split}.png"
-        plt.savefig(vis_path, dpi=150, bbox_inches='tight')
-        print(f"Visualization saved to {vis_path}")
+            # Add Text: Target + IoU
+            label = f"{target} | IoU: {iou:.2f} | {'SUCCESS' if success else 'FAIL'}"
+            cv2.putText(img, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+            cv2.putText(img, sample['sentence'][:60], (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+            
+            # Filename: {success}_{target}_{id}.jpg for easy sorting
+            status_str = "success" if success else "fail"
+            fname = f"{status_str}_{target}_{i:04d}.jpg"
+            
+            # Save (Convert back to BGR if using cv2.imwrite on RGB image, typically needed)
+            # Assuming sample['image'] is RGB (PIL standard loader)
+            save_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            cv2.imwrite(str(vis_dir / fname), save_img)
+            
+        print(f"Visualization complete. Check folder: {vis_dir}")
 
 
 if __name__ == '__main__':
