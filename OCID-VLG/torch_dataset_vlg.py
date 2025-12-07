@@ -175,7 +175,7 @@ class GraspVLGEvalDataset(Dataset):
         self.config = config or {}
 
         # Load raw data
-        self.raw_dataset = OCIDVLGPickleDataset(data_dir, split=split, version=version)
+        self.raw_dataset = OCIDVLGDataset(data_dir, split=split, version=version)
 
         # Quantizer
         if quantizer is None:
