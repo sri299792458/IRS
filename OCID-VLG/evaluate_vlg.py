@@ -399,6 +399,12 @@ def main(args):
         'config': {k: str(v) if isinstance(v, Path) else v for k, v in config.items()},
         'metrics': results['metrics'],
         'num_samples': len(results['predictions']),
+        # Detailed data for ablation analysis
+        'sentences': results['sentences'],
+        'successes': results['successes'],
+        'ious': results['ious'],
+        'predictions': results['predictions'],
+        'targets': results['targets'] if 'targets' in results else [],
     }
     
     with open(output_file, 'w') as f:

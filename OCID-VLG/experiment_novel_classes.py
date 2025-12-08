@@ -125,12 +125,7 @@ def train_novel_classes(args):
         data_collator=data_collator,
     )
     
-    print("\nStarting training...")
-    if args.resume_from_checkpoint:
-        print(f"Resuming from checkpoint: {args.resume_from_checkpoint}")
-        trainer.train(resume_from_checkpoint=args.resume_from_checkpoint)
-    else:
-        trainer.train()
+    trainer.train()
     trainer.save_model(config['checkpoint_dir'] + "/final")
     
     print(f"\nModel saved to: {config['checkpoint_dir']}/final")
@@ -218,6 +213,12 @@ def evaluate_novel_classes(args):
         'metrics': results['metrics'],
         'novel_classes': list(test_classes),
         'num_samples': len(results['successes']),
+        # Detailed data for ablation analysis
+        'sentences': results['sentences'],
+        'successes': results['successes'],
+        'ious': results['ious'],
+        'predictions': results['predictions'],
+        'targets': results['targets'] if 'targets' in results else [],
     }
     
     with open(output_path, 'w') as f:
@@ -281,8 +282,6 @@ if __name__ == '__main__':
     train_p = subparsers.add_parser('train')
     train_p.add_argument('--data_dir', type=str, required=True)
     train_p.add_argument('--checkpoint_dir', type=str, default=None)
-    train_p.add_argument('--resume_from_checkpoint', type=str, default=None,
-                        help='Path to checkpoint or "True" to resume from latest')
     train_p.add_argument('--no_wandb', action='store_true')
     
     # Evaluate
