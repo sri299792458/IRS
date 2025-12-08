@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=qwen_grasp_vlg_train
-#SBATCH --time=12:00:00          # 8 hours safe
+#SBATCH --time=05:00:00          # Resuming for 4 hours
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=16       # 16 CPU cores for 8 dataloader workers
 #SBATCH --mem=64G                # 64GB RAM
 #SBATCH --partition=msigpu       # Your partition
 #SBATCH --gres=gpu:a100:1        # Requesting 1 A100 GPU
-#SBATCH --account=stat8105       # Your account
+#SBATCH --account=csci5561       # Your account
 #SBATCH -o logs/slurm-vlg-%j.out
 #SBATCH -e logs/slurm-vlg-%j.err
 
@@ -41,7 +41,8 @@ du -sh $TMPDIR/OCID-VLG
 python -u OCID-VLG/train_grasp_vlg.py \
     --data_dir $TMPDIR/OCID-VLG \
     --checkpoint_dir /scratch.global/kanth042/IRS_project/checkpoints/qwen3-grasp-vlg-lora \
-    --run_name grasp-vlg-run1
+    --resume_from_checkpoint /scratch.global/kanth042/IRS_project/checkpoints/qwen3-grasp-vlg-lora/checkpoint-9000 \
+    --run_name grasp-vlg-continue
 
 echo "--------------------"
 echo "Job finished at $(date)"
